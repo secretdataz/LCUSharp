@@ -21,6 +21,8 @@ namespace LCUSharp
 
         private HttpClient httpClient = new HttpClient();
 
+        private RuneManager RuneManager = null;
+
         public string Token { get => _Token; set => _Token = value; }
         public ushort Port { get => _Port; set => _Port = value; }
 
@@ -132,30 +134,28 @@ namespace LCUSharp
             LeagueClosed();
         }
 
-        public RunePage GetCurrentRunePage()
+        public HttpResponse MakeApiRequest(HttpMethod method, string endpoint, object data = null, string contentType = HttpContentTypes.ApplicationJson)
         {
-            var response = httpClient.Get(ApiUri + "lol-perks/v1/currentpage");
-            var page = response.StaticBody<RunePage>();
-            return page;
-        }
-        
-        public RunePage[] GetRunePages()
-        {
-            var response = httpClient.Get(ApiUri + "lol-perks/v1/pages");
-            var pages = response.StaticBody<RunePage[]>();
-            return pages;
-        }
-
-        public AddRuneResult AddRunePage(RunePage page)
-        {
-            var response = httpClient.Post(ApiUri + "lol-perks/v1/pages", page, HttpContentTypes.ApplicationJson);
-            if(response.StatusCode != System.Net.HttpStatusCode.OK)
+            switch(method)
             {
-                var error = response.StaticBody<Error>();
-                if (error.message.Equals("Max pages reached"))
-                    return AddRuneResult.MaxPageReached;
+                case HttpMethod.Get:
+                    return httpClient.Get(ApiUri + endpoint);
+                case HttpMethod.Post:
+                    return httpClient.Post(ApiUri + endpoint, data, contentType);
+                case HttpMethod.Delete:
+                    return httpClient.Delete(ApiUri + endpoint);
+                case HttpMethod.Put:
+                    return httpClient.Put(ApiUri + endpoint, data, contentType);
+                default:
+                    throw new Exception("Unknown HTTP method");
             }
-            return AddRuneResult.Success;
+        }       
+
+        public RuneManager GetRuneManager()
+        {
+            if (RuneManager == null)
+                RuneManager = new RuneManager(this);
+            return RuneManager;
         }
     }
 }

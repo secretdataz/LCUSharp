@@ -1,4 +1,5 @@
-﻿using LCUSharp.DataObjects;
+﻿using EasyHttp.Http;
+using LCUSharp.DataObjects;
 
 namespace LCUSharp
 {
@@ -10,8 +11,15 @@ namespace LCUSharp
          * Executed when League of Legends client watched by this process is closed.
          */
         event LeagueClosedHandler LeagueClosed;
-        RunePage GetCurrentRunePage();
-        RunePage[] GetRunePages();
-        AddRuneResult AddRunePage(RunePage rune);
+        HttpResponse MakeApiRequest(HttpMethod method, string endpoint, object data = null, string contentType = HttpContentTypes.ApplicationJson);
+        RuneManager GetRuneManager();
+    }
+
+    public enum HttpMethod
+    {
+        Get,
+        Post,
+        Put,
+        Delete
     }
 }
