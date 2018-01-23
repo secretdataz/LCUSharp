@@ -1,6 +1,6 @@
 ﻿using JsonFx.Json;
 
-namespace LCUSharp
+namespace LCUSharp.DataObjects
 {
     public class Error
     {
