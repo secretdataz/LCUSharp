@@ -1,8 +1,9 @@
-﻿using EasyHttp.Http;
-using LCUSharp.DataObjects;
+﻿using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,24 +12,30 @@ namespace LCUSharp
 {
     public class LeagueClient : ILeagueClient
     {
-        private string _Token;
-        private ushort _Port;
         private string ApiUri;
         private string LeaguePath;
         private int LeaguePid;
 
         public event LeagueClosedHandler LeagueClosed;
 
-        private HttpClient httpClient = new HttpClient();
+        private HttpClient httpClient;
 
         private RuneManager RuneManager = null;
 
-        public string Token { get => _Token; set => _Token = value; }
-        public ushort Port { get => _Port; set => _Port = value; }
+        public string Token { get; set; }
+        public ushort Port { get; set; }
 
         private LeagueClient()
         {
+            var handler = new HttpClientHandler();
+            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) =>
+                {
+                    return true;
+                };
 
+            httpClient = new HttpClient(handler);
         }
 
         public static async Task<ILeagueClient> Connect()
@@ -97,9 +104,9 @@ namespace LCUSharp
 
                 var bytes = Encoding.ASCII.GetBytes("riot:" + Token);
 
-                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
-                httpClient.Request.ContentType = HttpContentTypes.ApplicationJson;
-                httpClient.Request.SetBasicAuthentication("riot", Token);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"riot:{Token}")));
+                httpClient.BaseAddress = new Uri(ApiUri);
 
                 if(this.LeaguePid == 0)
                 {
@@ -134,28 +141,41 @@ namespace LCUSharp
             LeagueClosed();
         }
 
-        public HttpResponse MakeApiRequest(HttpMethod method, string endpoint, object data = null, string contentType = HttpContentTypes.ApplicationJson)
-        {
-            switch(method)
-            {
-                case HttpMethod.Get:
-                    return httpClient.Get(ApiUri + endpoint);
-                case HttpMethod.Post:
-                    return httpClient.Post(ApiUri + endpoint, data, contentType);
-                case HttpMethod.Delete:
-                    return httpClient.Delete(ApiUri + endpoint);
-                case HttpMethod.Put:
-                    return httpClient.Put(ApiUri + endpoint, data, contentType);
-                default:
-                    throw new Exception("Unknown HTTP method");
-            }
-        }       
-
         public RuneManager GetRuneManager()
         {
             if (RuneManager == null)
                 RuneManager = new RuneManager(this);
             return RuneManager;
+        }
+
+        public HttpClient GetHttpClient()
+        {
+            return httpClient;
+        }
+
+        public async Task<HttpResponseMessage> MakeApiRequest(HttpMethod method, string endpoint, object data = null)
+        {
+            var json = data == null ? "" : JsonConvert.SerializeObject(data);
+            switch (method)
+            {
+                case HttpMethod.Get:
+                    return await httpClient.GetAsync(endpoint);
+                case HttpMethod.Post:
+                    return await httpClient.PostAsync(endpoint, new StringContent(json, Encoding.UTF8, "application/json"));
+                case HttpMethod.Put:
+                    return await httpClient.PutAsync(endpoint, new StringContent(json, Encoding.UTF8, "application/json"));
+                case HttpMethod.Delete:
+                    return await httpClient.DeleteAsync(endpoint);
+                default:
+                    throw new Exception("Unsupported HTTP method");
+            }
+        }
+
+        public async Task<T> MakeApiRequestAs<T>(HttpMethod method, string endpoint, object data = null)
+        {
+            var response = await MakeApiRequest(method, endpoint, data);
+            T responseObject = JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
+            return responseObject;
         }
     }
 }

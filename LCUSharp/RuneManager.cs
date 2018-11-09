@@ -1,8 +1,5 @@
 ﻿using LCUSharp.DataObjects;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace LCUSharp
 {
@@ -18,37 +15,32 @@ namespace LCUSharp
 
         public RunePage GetCurrentRunePage()
         {
-            var response = League.MakeApiRequest(HttpMethod.Get, endpointRoot + "currentpage");
-            return response.StaticBody<RunePage>();
+            return League.MakeApiRequestAs<RunePage>(HttpMethod.Get, endpointRoot + "currentpage").Result;
         }
 
         public RunePage[] GetRunePages()
         {
-            var response = League.MakeApiRequest(HttpMethod.Get, endpointRoot + "pages");
-            return response.StaticBody<RunePage[]>();
+            return League.MakeApiRequestAs<RunePage[]>(HttpMethod.Get, endpointRoot + "pages").Result;
         }
 
         public RunePage GetRunePageById(int id)
         {
-            var response = League.MakeApiRequest(HttpMethod.Get, endpointRoot + "page/" + id.ToString());
-            return response.StaticBody<RunePage>();
+            return League.MakeApiRequestAs<RunePage>(HttpMethod.Get, endpointRoot + "page/" + id.ToString()).Result;
         }
 
 
         bool DeleteRunePage(int id)
         {
-            var response = League.MakeApiRequest(HttpMethod.Delete, endpointRoot + "page/" + id.ToString());
-            return response.StatusCode == HttpStatusCode.OK;
+            return League.MakeApiRequest(HttpMethod.Delete, endpointRoot + "page/" + id.ToString()).Result.StatusCode == HttpStatusCode.OK;
         }
 
         public AddRuneResult AddRunePage(RunePage page)
         {
-            var response = League.MakeApiRequest(HttpMethod.Post, "lol-perks/v1/pages", page);
+            var response = League.MakeApiRequestAs<Error>(HttpMethod.Post, "lol-perks/v1/pages", page).Result;
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            if (response.HttpStatus != 200) // OK
             {
-                var error = response.StaticBody<Error>();
-                if (error.message.Equals("Max pages reached"))
+                if (response.Message.Equals("Max pages reached"))
                     return AddRuneResult.MaxPageReached;
             }
 

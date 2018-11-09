@@ -1,5 +1,5 @@
-﻿using EasyHttp.Http;
-using LCUSharp.DataObjects;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace LCUSharp
 {
@@ -11,8 +11,10 @@ namespace LCUSharp
          * Executed when League of Legends client watched by this process is closed.
          */
         event LeagueClosedHandler LeagueClosed;
-        HttpResponse MakeApiRequest(HttpMethod method, string endpoint, object data = null, string contentType = HttpContentTypes.ApplicationJson);
         RuneManager GetRuneManager();
+        HttpClient GetHttpClient();
+        Task<HttpResponseMessage> MakeApiRequest(HttpMethod method, string endpoint, object data = null);
+        Task<T> MakeApiRequestAs<T>(HttpMethod method, string endpoint, object data = null);
     }
 
     public enum HttpMethod

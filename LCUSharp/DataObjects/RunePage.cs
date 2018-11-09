@@ -1,30 +1,30 @@
-﻿using JsonFx.Json;
+﻿using Newtonsoft.Json;
 
 namespace LCUSharp.DataObjects
 {
     public class RunePage
     {
-        [JsonName("current")]
+        [JsonProperty("current")]
         public bool IsCurrentPage { get; set; }
-        [JsonName("id")]
+        [JsonProperty("id")]
         public int Id { get; set; }
-        [JsonName("formatVersion")]
+        [JsonProperty("formatVersion")]
         public int FormatVersion;
-        [JsonName("isActive")]
+        [JsonProperty("isActive")]
         public bool IsActive { get; set; }
-        [JsonName("isDeletable")]
+        [JsonProperty("isDeletable")]
         public bool IsDeletable { get; set; }
-        [JsonName("isEditable")]
+        [JsonProperty("isEditable")]
         public bool IsEditable { get; set; }
-        [JsonName("isValid")]
+        [JsonProperty("isValid")]
         public bool IsValid { get; set; }
-        [JsonName("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonName("primaryStyleId")]
+        [JsonProperty("primaryStyleId")]
         public int PrimaryTreeId { get; set; }
-        [JsonName("selectedPerkIds")]
+        [JsonProperty("selectedPerkIds")]
         public int[] SelectedRunes { get; set; }
-        [JsonName("subStyleId")]
+        [JsonProperty("subStyleId")]
         public int SecondaryTreeId { get; set; }
 
         public RunePage()

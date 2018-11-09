@@ -1,18 +1,15 @@
-﻿using JsonFx.Json;
+﻿using Newtonsoft.Json;
 
 namespace LCUSharp.DataObjects
 {
     public class Error
     {
-        [JsonName("errorCode")]
-        public string errorCode { get; set; }
-        [JsonName("httpStatus")]
-        public int httpStatus { get; set; }
-
-        /*[JsonName("implementationDetails")]
-        public string[] implementationDetails { get; set; }*/
-        [JsonName("message")]
-        public string message { get; set; }
-
+        [JsonProperty("errorCode")]
+        public string ErrorCode { get; set; }
+        [JsonProperty("httpStatus")]
+        public int HttpStatus { get; set; }
+        // public string[] implementationDetails { get; set; }
+        [JsonProperty("message")]
+        public string Message { get; set; }
     }
 }
