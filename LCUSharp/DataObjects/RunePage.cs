@@ -42,6 +42,7 @@ namespace LCUSharp.DataObjects
         Precision = 8000,
         PressTheAttack = 8005,
         LethalTempo = 8008,
+        Conqueror = 8010,
         FleetFootwork = 8021,
         Overheal = 9101,
         Triumph = 9111,
@@ -55,6 +56,7 @@ namespace LCUSharp.DataObjects
 
         // Domination tree
         Domination = 8100,
+        UltimateHunter = 8106,
         Electrocute = 8112,
         Predator = 8124,
         DarkHarvest = 8128,
@@ -67,6 +69,7 @@ namespace LCUSharp.DataObjects
         RavenousHunter = 8135,
         IngeniousHunter = 8134,
         RelentlessHunter = 8105,
+        HailOfBlades = 9923,
 
         // Sorcery tree
         Sorcery = 8200,
@@ -82,6 +85,7 @@ namespace LCUSharp.DataObjects
         Scorch = 8237,
         Waterwalking = 8232,
         GatheringStorm = 8236,
+        NimbusCloak = 8275,
 
         // Resolve tree
         Resolve = 8400,
@@ -97,6 +101,8 @@ namespace LCUSharp.DataObjects
         Overgrowth = 8451,
         Revitalize = 8453,
         SecondWind = 8444,
+        Chrysalis = 8472,
+        BonePlating = 8473,
 
         // Inspiration tree
         Inspiration = 8300,
@@ -112,6 +118,7 @@ namespace LCUSharp.DataObjects
         CosmicInsight = 8347,
         ApproachVelocity = 8410,
         CelestialBody = 8339,
+        TimeWarpTonic = 8352,
     }
 
     public enum AddRuneResult
