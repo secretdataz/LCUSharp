@@ -1,4 +1,5 @@
 ﻿using LCUSharp.DataObjects;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace LCUSharp
@@ -28,6 +29,11 @@ namespace LCUSharp
             return League.MakeApiRequestAs<RunePage>(HttpMethod.Get, endpointRoot + "page/" + id.ToString()).Result;
         }
 
+        public int GetOwnedPageCount()
+        {
+            var result = League.MakeApiRequest(HttpMethod.Get, endpointRoot + "inventory").Result;
+            return int.Parse(result.Content.ReadAsStringAsync().Result);
+        }
 
         bool DeleteRunePage(int id)
         {
@@ -36,11 +42,13 @@ namespace LCUSharp
 
         public AddRuneResult AddRunePage(RunePage page)
         {
-            var response = League.MakeApiRequestAs<Error>(HttpMethod.Post, "lol-perks/v1/pages", page).Result;
+            var response = League.MakeApiRequest(HttpMethod.Post, endpointRoot + "pages", page).Result;
 
-            if (response.HttpStatus != 200) // OK
+            if (response.StatusCode != HttpStatusCode.OK)
             {
-                if (response.Message.Equals("Max pages reached"))
+                var json = response.Content.ReadAsStringAsync().Result;
+                var error = JsonConvert.DeserializeObject<Error>(json);
+                if (error.Message.Equals("Max pages reached"))
                     return AddRuneResult.MaxPageReached;
             }
 
