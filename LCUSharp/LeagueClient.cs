@@ -22,6 +22,8 @@ namespace LCUSharp
 
         private RuneManager RuneManager = null;
 
+        private Summoners Summoners = null;
+
         public string Token { get; set; }
         public ushort Port { get; set; }
 
@@ -100,7 +102,7 @@ namespace LCUSharp
                 string[] items = text.Split(':');
                 Token = items[3];
                 Port = ushort.Parse(items[2]);
-                ApiUri = "https://localhost:" + Port.ToString() + "/";
+                ApiUri = "https://127.0.0.1:" + Port.ToString() + "/";
 
                 var bytes = Encoding.ASCII.GetBytes("riot:" + Token);
 
@@ -176,6 +178,13 @@ namespace LCUSharp
             var response = await MakeApiRequest(method, endpoint, data);
             T responseObject = JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
             return responseObject;
+        }
+
+        public Summoners GetSummonersModule()
+        {
+            if (Summoners == null)
+                Summoners = new Summoners(this);
+            return Summoners;
         }
     }
 }
