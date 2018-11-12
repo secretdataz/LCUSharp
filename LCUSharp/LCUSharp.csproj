@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Jittapan Pluemsumran</Authors>
+    <Company />
+    <Description>League of Legends client integration library for .NET</Description>
+    <Copyright>Copyright © Jittapan Pluemsumran 2018</Copyright>
+    <PackageLicenseUrl>https://github.com/secretdataz/LCUSharp/blob/dev/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/secretdataz/LCUSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/secretdataz/LCUSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>LeagueOfLegends</PackageTags>
+    <PackageId>LCUSharp</PackageId>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
