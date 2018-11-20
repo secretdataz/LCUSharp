@@ -89,6 +89,7 @@ namespace LCUSharp.DataObjects
 
         // Resolve tree
         Resolve = 8400,
+        ShieldBash = 8401,
         GraspOfTheUndying = 8437,
         Aftershock = 8439,
         Guardian = 8465,
@@ -119,6 +120,14 @@ namespace LCUSharp.DataObjects
         ApproachVelocity = 8410,
         CelestialBody = 8339,
         TimeWarpTonic = 8352,
+
+        // Stat modifications
+        HealthScaling = 5001,
+        Armor = 5002,
+        MagicRes = 5003,
+        AttackSpeed = 5005,
+        CdrScaling = 5007,
+        Adaptive = 5008,
     }
 
     public enum AddRuneResult
